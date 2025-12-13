@@ -1,0 +1,6 @@
+1.-
+ficheros: b, c, d, e, g
+base de datos: a, f, h, i, j
+2.- Sí, pero menos y de forma más controlada.
+3.- El administrador de la base de datos gestiona la estructura por la que se organizan los datos, como funciona. El administrador de datos gestiona los permisos,
+y conoce los datos.
