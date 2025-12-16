@@ -18,19 +18,29 @@ order by sum(salario) desc;
 /*b) Indica por cada número de departamento y puesto, el número de empleados que desempeñan
 ese puesto en ese departamento, así como su salario mínimo y máximo. Ordena el resultado
 por número de departamento y puesto.*/
-
-
+select D.NumDep, puesto, count(*), min(salario), max(salario)
+from empleado E join departamento D on E.numDep = D.NumDep
+group by d.numdep, puesto
+order by D.numdep, puesto;
 
 /*c) Solo consideraremos a los empleados no directores. Pues bien, indica por cada departamento
 con un salario medio de sus empleados no directores superior a 1200 €, el número del
 departamento, el número de empleados no directores que tiene y su salario medio (redondeado
 a dos decimales), ordenando el resultado por el número de empleados de cada departamento.*/
-
+select numdep, count(*) 'Trabajadores por departamento', puesto, round(avg(salario), 2) 'Salario medio de los empleados'
+from empleado 
+where puesto not like 'Director'
+group by numdep, puesto
+having avg(salario) > 1200
+order by count(*);
 
 
 /*d) Indica para los departamentos con salario medio superior a 1800 €, su número, nombre, el
 salario medio de sus empleados y el salario máximo y mínimo.*/
-
+select d.numdep, d.nomdep, round(avg(salario),2) 'Salario medio', max(salario) 'Salario más alto', min(salario) 'Salario más bajo'
+from departamento d natural join empleado e
+group by d.numdep
+having avg(salario) > 1800;
 
 
 /*e) Visualiza el número de vendedores del departamento llamado Ventas.*/
