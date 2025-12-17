@@ -5,7 +5,7 @@ collate utf8mb4_spanish_ci;
 use geografia_bd;
 
 create table localidades
-(id_localidad int unsigned,
+(id_localidad int unsigned primary key,
 nombre varchar(30) not null,
 poblacion int unsigned not null,
 n_provincia int unsigned not null,
@@ -39,6 +39,11 @@ add constraint fk_idcapital foreign key (id_capital) references localidades(id_l
 
 alter table provincias
 add constraint fk_idcomunidad foreign key (id_comunidad) references comunidades(id_comunidad) on update cascade;
+
+alter table provincias
+add constraint fk_idcapi_prov foreign key (id_capital) references localidades(id_localidad) on update cascade;
+
+
 
 /*Responde a las siguientes preguntas:
 a) ¿Por qué se ha especificado como única la pareja de atributos nombre + n_provincia en la tabla
