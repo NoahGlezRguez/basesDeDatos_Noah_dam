@@ -6,8 +6,8 @@ use suministros_bd;
 
 create table proveedor
 (codprov int unsigned primary key ,			
-nomprov varchar(30) not null unique,
-dirprov varchar(30) not null
+nomprov varchar(30) not null,
+dirprov varchar(30) not null,
 constraint ck_codprov check (codprov > 0)
 );
 
@@ -28,17 +28,19 @@ stockmincomp int unsigned not null default 5
 create table composicion
 (codcompsup char(4),
 codcompinf char(4),
-cant int unsigned default 1,
-constraint pk_codcomps_composicion primary key (codcompsup, codcompinf),
-constraint fk_codcomsup_codcominf foreign key (codcompsup, codcompinf) references componente(codcomp) on delete restrict
+cant int unsigned not null default 1,
+constraint pk_composicion primary key (codcompsup, codcompinf),
+constraint fk_codcomsup foreign key (codcompsup) references componente(codcomp) on delete restrict,
+constraint fk_codcominf foreign key (codcompinf) references componente(codcomp) on delete restrict,
+constraint ck_cantidad check(cant > 0)
 );
 
 create table fabricacion
 (codmp int unsigned,
 codcomp char(4),
-constraint pk_codmp_codcomp primary key (codmp, codcomp),
-constraint fk_codmp foreign key (codmp) references materiaprima(codmp)  on delete restrict,
-constraint fk_codcomp foreign key (condcomp) references componente(codmp) on delete restrict
+constraint pk_fabricacion primary key (codmp, codcomp),
+constraint fk_codmp_fab foreign key (codmp) references materiaprima(codmp)  on delete restrict,
+constraint fk_codcomp_fab foreign key (codcomp) references componente(codcomp) on delete restrict
 );
 
 
