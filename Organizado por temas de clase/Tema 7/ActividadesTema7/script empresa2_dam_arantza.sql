@@ -1,0 +1,115 @@
+-- Con el usuario root
+create database empresa2_dam
+collate utf8mb4_spanish_ci;
+/*grant all on empresa2_dam.* to dam@localhost*/;
+
+-- Con el usuario dam
+use empresa2_dam;
+
+CREATE TABLE HABILIDAD
+(CodHab CHAR (5) PRIMARY KEY,
+DesHab VARCHAR(30) NOT NULL UNIQUE);
+
+INSERT INTO HABILIDAD VALUES ('FONTA', 'Fontanería');
+INSERT INTO HABILIDAD VALUES ('GEREN', 'Gerencia');
+INSERT INTO HABILIDAD VALUES ('GESCO', 'Gestión Contable');
+INSERT INTO HABILIDAD VALUES ('MARKE', 'Márketing');
+INSERT INTO HABILIDAD VALUES ('MECAN', 'Mecanografía');
+INSERT INTO HABILIDAD VALUES ('RELPU', 'Relaciones Públicas');
+INSERT INTO HABILIDAD VALUES ('TELEF', 'Telefonista');
+
+CREATE TABLE CENTRO
+(CodCen CHAR(4) PRIMARY KEY,
+CodEmpDir int unsigned,
+NomCen VARCHAR(30) NOT NULL,
+DirCen VARCHAR(50) NOT NULL, 
+PobCen VARCHAR(20) NOT NULL);
+
+INSERT INTO CENTRO VALUES ('DIGE', 1, 'Dirección General', 'Av. Constitución 88', 'Murcia');
+INSERT INTO CENTRO VALUES ('FAZS', 6, 'Fábrica Zona Sur', 'Pol. Industrial Gral. Bastarreche', 'Cartagena');
+INSERT INTO CENTRO VALUES ('OFZS', 6, 'Oficinas Zona Sur', 'Pl. España 14', 'Cartagena');
+
+CREATE TABLE DEPARTAMENTO 
+(CodDep CHAR(5) PRIMARY KEY,
+CodEmpDir int unsigned not null,
+CodDepDep CHAR(5),
+foreign key (CodDepDep) references Departamento (CodDep) on delete cascade,
+CodCen CHAR(4),
+foreign key (CodCen) REFERENCES Centro (CodCen) ON DELETE CASCADE,
+NomDep VARCHAR(40) NOT NULL,
+PreAnu numeric(9,2) NOT NULL,
+TiDir enum('F', 'P') NOT NULL,
+ CONSTRAINT CH_PreAnu CHECK (PreAnu > 0));
+
+INSERT INTO DEPARTAMENTO VALUES ('DIRGE', 1, NULL,'DIGE', 'Dirección General', 156000, 'P');
+INSERT INTO DEPARTAMENTO VALUES ('INYDI', 2, 'DIRGE', 'DIGE', 'Investigación y Diseño', 150000, 'P');
+INSERT INTO DEPARTAMENTO VALUES ('JEFZS',6, 'DIRGE',NULL, 'Jefatura Fábrica Zona Sur', 37200, 'F');
+INSERT INTO DEPARTAMENTO VALUES ('ADMZS', 5,'JEFZS', NULL,  'Administración Zona Sur', 84000, 'P');
+INSERT INTO DEPARTAMENTO VALUES ('PROZS', 9, 'JEFZS', 'FAZS',  'Producción Zona Sur', 600000, 'P');
+INSERT INTO DEPARTAMENTO VALUES ('VENZS', 3, 'ADMZS','OFZS', 'Ventas Zona Sur', 81000, 'F');
+
+ 
+CREATE TABLE EMPLEADO
+(CodEmp int unsigned PRIMARY KEY,
+CodDep CHAR(5),
+foreign key (CodDep) REFERENCES Departamento (CodDep) ON DELETE CASCADE,
+ExTelEmp int unsigned,
+FecInEmp DATE NOT NULL, 
+FecNaEmp DATE NOT NULL,
+NIFEmp CHAR(9) NOT NULL UNIQUE,
+NomEmp VARCHAR (40) NOT NULL,
+NumHi int unsigned DEFAULT 0 NOT NULL,
+SalEmp numeric(7,2) NOT NULL,
+CONSTRAINT CH_SalEmp CHECK (SalEmp >= 13200));
+
+INSERT INTO EMPLEADO  VALUES (5, 'ADMZS', 1239,  '2006-08-07', '1971-03-08', '38223923T', 'Alada Veraz, Juana', 1, 37200); 
+INSERT INTO EMPLEADO  VALUES (7, 'PROZS', NULL,  '2020-06-30', '1995-08-07', '47123132D', 'Forzado López, Galeote', 0, 14600); 
+INSERT INTO EMPLEADO VALUES (6, 'JEFZS', 23838, '2001-08-01', '1969-06-03', '26454122D', 'Gozque Altanero, Cándido', 1, 30000); 
+INSERT INTO EMPLEADO  VALUES (9, 'PROZS', 12124, '1999-06-10', '1968-07-19', '11312121D', 'Mando Correa, Rosa', 2, 18600); 
+INSERT INTO EMPLEADO  VALUES (2, 'INYDI', 2233, '2021-06-14', '1990-06-08', '21231347K', 'Manrique Bacterio, Lucía', 0, 27000); 
+INSERT INTO EMPLEADO VALUES (8, 'PROZS', NULL,  '2014-08-15', '1976-06-15', '32132154H', 'Mascullas Alto, Eloísa', 1, 14600); 
+INSERT INTO EMPLEADO  VALUES (3, 'VENZS', 2133, '2020-06-08','1985-12-07', '23823930D', 'Monforte Cid, Roldán', 1, 31200); 
+INSERT INTO EMPLEADO  VALUES ( 10, 'PROZS', NULL,  '2003-11-02','1975-01-07', '32939393D', 'Mox Almuerta, Mario', 0, 13800); 
+INSERT INTO EMPLEADO VALUES (1, 'DIRGE', 1111, '1995-07-01','1961-08-07', '21451451V', 'Saladino Manda, Augusto', 1, 43200); 
+INSERT INTO EMPLEADO  VALUES (4, 'VENZS', 3838, '2000-08-09', '1970-02-21', '38293923L', 'Topaz Illan, Carlos', 0, 19200); 
+
+
+ALTER TABLE CENTRO
+ADD CONSTRAINT FK_Director_Centro FOREIGN KEY (CodEmpDir) REFERENCES EMPLEADO (CodEmp) ON DELETE CASCADE;
+
+ALTER TABLE DEPARTAMENTO
+ADD CONSTRAINT FK_Director_Departamento FOREIGN KEY (CodEmpDir) REFERENCES EMPLEADO (CodEmp) ON DELETE CASCADE;
+
+CREATE TABLE HIJO 
+(CodEmp int unsigned,
+foreign key (CodEmp) REFERENCES EMPLEADO (CodEmp) ON DELETE CASCADE,
+NumHij int unsigned ,
+FecNaHi DATE NOT NULL,
+NomHi VARCHAR(40) NOT NULL,
+CONSTRAINT CH_NumHij CHECK (NumHij >= 1),
+PRIMARY KEY (CodEmp, NumHij));
+
+INSERT INTO HIJO VALUES (8,1, '2004-03-14', 'Fuerte Mascullas, Anacleto');
+INSERT INTO HIJO VALUES (9,1, '2008-02-28', 'León Mando, Elvira');
+INSERT INTO HIJO VALUES (9,2, '2010-07-18', 'León Mando, Plácido'); 
+INSERT INTO HIJO VALUES (3,1, '2020-09-12', 'Monforte Lemos, Jesús'); 
+INSERT INTO HIJO VALUES (5,1, '2002-02-06', 'Pastora Alada, Mateo'); 
+INSERT INTO HIJO VALUES (1,1, '1989-06-07', 'Saladino Oropel, Flavia');
+
+CREATE TABLE HABEMP
+(CodHab CHAR (5),
+foreign key (CodHab) REFERENCES HABILIDAD (CodHab) ON DELETE CASCADE,
+CodEmp int unsigned,
+foreign key (CodEmp) REFERENCES EMPLEADO (CodEmp) ON DELETE CASCADE,
+NivHab int unsigned DEFAULT 5 NOT NULL ,
+CONSTRAINT CH_NivHab CHECK (NivHab <= 10),
+PRIMARY KEY (CodHab, CodEmp));
+
+INSERT INTO HABEMP VALUES ('GEREN', 1, 10);
+INSERT INTO HABEMP VALUES ('RELPU', 1, 9);
+INSERT INTO HABEMP VALUES ('MARKE', 3, 9);
+INSERT INTO HABEMP VALUES ('MARKE', 4, 6);
+INSERT INTO HABEMP VALUES ('GESCO', 5, 9);
+INSERT INTO HABEMP VALUES ('RELPU', 5, 8);
+INSERT INTO HABEMP VALUES ('FONTA', 8, 7);
+
