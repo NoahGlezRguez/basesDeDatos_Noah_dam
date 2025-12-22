@@ -1,3 +1,6 @@
+create database empresa_dam
+collate utf8mb4_spanish_ci;
+
 use empresa_dam;
 
 create table Departamento
