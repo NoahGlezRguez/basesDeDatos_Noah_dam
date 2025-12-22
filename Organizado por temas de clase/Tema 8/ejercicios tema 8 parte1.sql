@@ -64,26 +64,35 @@ use empresa2_dam;
 /*a) Muestra por cada centro de trabajo, su nombre y dirección, así como el número de
 departamentos en que se divide y el presupuesto máximo y mínimo de sus departamentos.*/
 
-
+select c.nomcen, c.dircen, count(d.coddep) 'nº de departamentos del centro', max(d.preanu) 'presupuesto maximo departamento', min(d.preanu) 'presupuesto minimo departamento'
+from centro c left join departamento d on c.codcen = d.codcen
+group by c.nomcen, c.dircen;
 
 /*b) Muestra por cada habilidad su código y descripción, el número de empleados que la poseen y
 el nivel medio de dicha habilidad redondeado a un decimal.*/
 
-
-
+select ha.codhab, ha.deshab, count(e.codemp) 'empleados con la habilidad', round(avg(he.nivhab), 2) 'nivel medio de habilidad'
+from habilidad ha join habemp he on ha.codhab = he.CodHab join empleado e on he.Codemp = e.Codemp
+group by ha.CodHab, ha.DesHab;
 
 -- el otro apartados va en otra entrega
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /* EJERCICIO 3.-*/
-use ;
+use geografia_dam;
 
 /*a) Obtén los nombres de las comunidades autónomas uniprovinciales, es decir, las formadas por
 una sola provincia.*/
 
-
+select c.nombre
+from  comunidades c join provincias p on c.id_comunidad = p.id_comunidad
+group by c.id_comunidad, c.nombre
+having count(p.n_provincia) = 1;
 
 /*b) Muestra por cada provincia, su nombre, su superficie, su población y su densidad poblacional
 redondeada a 2 decimales (columna Densidad poblacional). Este último dato se calcula
 dividiendo la población de la provincia entre su superficie. Ordena los datos por provincias
 desde la menos densamente poblada hasta la más densamente poblada.*/
+
+select p.nombre,  p.superficie, p.poblacion
+
