@@ -1,5 +1,5 @@
 
-/* TEMA 8 - ACTIVIDADES - PARTE 1 */
+/* TEMA 8 - ACTIVIDADES - PARTE 1 - ej1 f,g */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /* EJERCICIO 1.-*/
 /*f) Indica para todos los empleados que trabajan en el departamento de ventas su nombre, salario,
@@ -22,11 +22,64 @@ having count(e.numempjefe) >= 2
 order by count(e.numemp) desc; 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-/* EJERCICIO 2.-*/
+/* EJERCICIO 2.- de la parte 1*/ /*  ej1 a,b,c,d,e | ej2 a,b,c | ej3 a,b  */
 use empresa2_dam;
 
 
 
 /*c) Muestra por cada departamento su nombre, presupuesto, el nombre del departamento del que
 depende y el presupuesto de este. Asigna alias a todos los atributos.*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*PARTE 2 */
+
+/*Ejercicio 1.*/
+
+/*a. Muestra el nombre, puesto, salario y fecha de ingreso de los empleados que desempeñen el
+mismo puesto que Esther Gómez Bilbao o que tengan un salario mayor o igual que el de
+Albert Rius García.*/
+
+
+
+/*b. Muestra los nombres y puestos de los empleados que tienen el mismo puesto que el
+empleado apellidado Jiménez, excluido este.*/
+
+
+
+/*c. Visualiza los nombres de los departamentos en los que el salario medio es mayor o igual que
+la media de todos los salarios.*/
+
+
+
+/*d. Selecciona el nombre de los empleados, puesto y localidad donde trabajan los empleados que
+trabajan en los departamentos en los que trabajan los vendedores.*/
+
+
+
+/*e. Obtén los nombres de los departamentos en los que trabajen más de tres empleados mediante
+una consulta de resumen con combinación de tablas y mediante una consulta con
+subconsulta.*/
+
+/*Ejercicio 2.*/
+
+/*a.  Para todos los departamentos con un presupuesto superior a la media, muestra el código del
+departamento, su nombre, su presupuesto, su tipo de director y el nombre de su director.*/
+
+
+/*b. Para todos los empleados que cobren más que el salario medio de todos los empleados,
+muestra el nombre del empleado, su salario, su extensión telefónica, el nombre del
+departamento en el que trabaja y el nombre del centro en el que está ubicado su
+departamento.*/
+
+/*Ejercicio 3.*/
+
+/*a. Obtén el nombre y número de habitantes de las localidades que tienen más población que la
+ciudad de Vitoria.*/
+
+
+/*Indica para las localidades con más población que toda la provincia de Álava, el nombre de
+la localidad, el nombre de la provincia a la que pertenece y la población de la localidad,
+ordenando el resultado por población de la ciudad más poblada a la menos poblada. (NOTA.
+La población de una provincia se calcula sumando la población de todas sus localidades).*/
+
 
