@@ -75,8 +75,6 @@ select ha.codhab, ha.deshab, count(e.codemp) 'empleados con la habilidad', round
 from habilidad ha join habemp he on ha.codhab = he.CodHab join empleado e on he.Codemp = e.Codemp
 group by ha.CodHab, ha.DesHab;
 
--- el otro apartados va en otra entrega
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /* EJERCICIO 3.-*/
 use geografia_dam;

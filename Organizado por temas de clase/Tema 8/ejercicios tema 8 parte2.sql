@@ -22,7 +22,7 @@ having count(e.numempjefe) >= 2
 order by count(e.numemp) desc; 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-/* EJERCICIO 2.- de la parte 1*/ /*  ej1 a,b,c,d,e | ej2 a,b,c | ej3 a,b  */
+/* EJERCICIO 2.- de la parte 1 ej 2 c*/ 
 use empresa2_dam;
 
 
@@ -31,7 +31,7 @@ use empresa2_dam;
 depende y el presupuesto de este. Asigna alias a todos los atributos.*/
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-/*PARTE 2 */
+/*PARTE 2 */  	/*de la parte 2 ej1 a,b,c,d,e | ej2 a,b,c | ej3 a,b  */
 
 /*Ejercicio 1.*/
 
