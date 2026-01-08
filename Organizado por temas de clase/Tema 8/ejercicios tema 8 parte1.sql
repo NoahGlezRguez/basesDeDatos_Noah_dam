@@ -92,5 +92,8 @@ redondeada a 2 decimales (columna Densidad poblacional). Este último dato se ca
 dividiendo la población de la provincia entre su superficie. Ordena los datos por provincias
 desde la menos densamente poblada hasta la más densamente poblada.*/
 
-select p.nombre,  p.superficie, p.poblacion
-
+select p.nombre Provincia,  p.superficie Km2, sum(l.poblacion) as Población, round(sum(l.poblacion / p.superficie), 2) 'Densidad poblacional'
+from provincias p join localidades l on p.n_provincia = l.n_provincia
+group by p.nombre
+order by sum(l.poblacion) / p.superficie;
+	
