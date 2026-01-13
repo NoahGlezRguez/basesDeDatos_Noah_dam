@@ -86,30 +86,30 @@ having avg(salario) >= (select avg(salario) 'Salario medio'from empleado);
 /*d. Selecciona el nombre de los empleados, puesto y localidad donde trabajan los empleados que
 trabajan en los departamentos en los que trabajan los vendedores.*/
 
-/*esta consulta me muestra los numeros de departamento que tengan al menos un vendedor trabajando ahi*/
-select d.numdep
-from departamento d natural join empleado e
-group by e.numdep, puesto
-having e.puesto = 'vendedor';
+	/*esta consulta me muestra los numeros de departamento que tengan al menos un vendedor trabajando ahi*/
+	select d.numdep
+	from departamento d natural join empleado e
+	group by e.numdep, puesto
+	having e.puesto = 'vendedor';
 
-/*de los departamentos que tengan algun vendedor, mostrara todos los trabajadores sean vendedores o no*/
-select nomemp, puesto, d.localidad
-from empleado e natural join departamento d
-where e.numdep = (select d.numdep from departamento d natural join empleado e group by e.numdep, puesto having e.puesto = 'vendedor'); 
+	/*de los departamentos que tengan algun vendedor, mostrara todos los trabajadores sean vendedores o no*/
+	select nomemp, puesto, d.localidad
+	from empleado e natural join departamento d
+	where e.numdep = (select d.numdep from departamento d natural join empleado e group by e.numdep, puesto having e.puesto = 'vendedor'); 
 
 
 /*e. Obtén los nombres de los departamentos en los que trabajen más de tres empleados mediante
 una consulta de resumen con combinación de tablas y mediante una consulta con
 subconsulta.*/
-select d.nomdep, count(*) 'nº empleados'
-from departamento d natural join empleado e
-group by d.numdep
-having count(*) > 3;
+	select d.nomdep, count(*) 'nº empleados'
+	from departamento d natural join empleado e
+	group by d.numdep
+	having count(*) > 3;
 
-select nomdep
-from departamento
-group by nomdep 
-having nomdep in (select d.nomdep from departamento d natural join empleado e group by d.numdep having count(*) > 3);
+	select nomdep
+	from departamento
+	group by nomdep 
+	having nomdep in (select d.nomdep from departamento d natural join empleado e group by d.numdep having count(*) > 3);
 
 /*Ejercicio 2.*/
 
@@ -118,11 +118,46 @@ use empresa2_dam;
 /*a.  Para todos los departamentos con un presupuesto superior a la media, muestra el código del
 departamento, su nombre, su presupuesto, su tipo de director y el nombre de su director.*/
 
+	/*todos los presupuestos*/
+	select coddep, preanu
+	from departamento;
+
+	/*presupuesto medio*/
+	select avg(preanu) 'presupuesto medio'
+	from departamento;
+
+	/*los que tienen presupuesto superior a la media*/
+	select coddep, preanu
+	from departamento
+	where preanu >= (select avg(preanu) 'presupuesto medio'
+	from departamento);
+
+	/* muestra el código del departamento, su nombre, su presupuesto, su tipo de director y el nombre de su director.*/
+	select d.coddep 'Código del departamento', d.nomdep 'Nombre del departamento', d.preanu 'Presupuesto anual', d.tidir 'Tipo de director', e.nomemp 'Nombre del director'
+	from departamento d natural join empleado e
+	where d.codempdir = e.codemp and d.coddep = (select coddep from departamento where preanu >= (select avg(preanu) 'presupuesto medio' from departamento));
+
 
 /*b. Para todos los empleados que cobren más que el salario medio de todos los empleados,
 muestra el nombre del empleado, su salario, su extensión telefónica, el nombre del
 departamento en el que trabaja y el nombre del centro en el que está ubicado su
 departamento.*/
+
+	/*salario medio de los empleados*/
+	select round(avg(salemp), 2) 'salario medio'
+	from empleado;
+	
+    select * from departamento;
+    
+    /*los que tienen salario superior a la media*/
+	select codemp, salemp, nomemp
+    from empleado
+    where salemp > (select avg(salemp) 'salario medio' from empleado); 
+    
+    /*informacion de esos empleados*/
+    select distinct nomemp 'Empleado', salemp 'Salario', extelemp 'Extensión telefónica', d.nomdep 'Nombre del departamento', c.nomcen 'Centro de trabajo'
+    from empleado e left join departamento d on e.coddep = d.coddep left join centro c on d.codcen = c.codcen
+    where salemp > (select avg(salemp) 'salario medio' from empleado);
 
 /*Ejercicio 3.*/
 use geografia_dam;
