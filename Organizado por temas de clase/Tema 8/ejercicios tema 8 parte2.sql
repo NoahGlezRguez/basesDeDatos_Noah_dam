@@ -36,6 +36,8 @@ depende y el presupuesto de este. Asigna alias a todos los atributos.*/
 /*PARTE 2 */  	/*de la parte 2 ej1 a,b,c,d,e | ej2 a,b,c | ej3 a,b  */
 
 /*Ejercicio 1.*/
+use empresa_dam;
+
 
 /*a. Muestra el nombre, puesto, salario y fecha de ingreso de los empleados que desempeñen el
 mismo puesto que Esther Gómez Bilbao o que tengan un salario mayor o igual que el de
@@ -63,6 +65,7 @@ una consulta de resumen con combinación de tablas y mediante una consulta con
 subconsulta.*/
 
 /*Ejercicio 2.*/
+use empresa2_dam;
 
 /*a.  Para todos los departamentos con un presupuesto superior a la media, muestra el código del
 departamento, su nombre, su presupuesto, su tipo de director y el nombre de su director.*/
@@ -74,6 +77,7 @@ departamento en el que trabaja y el nombre del centro en el que está ubicado su
 departamento.*/
 
 /*Ejercicio 3.*/
+use geografia_dam;
 
 /*a. Obtén el nombre y número de habitantes de las localidades que tienen más población que la
 ciudad de Vitoria.*/
