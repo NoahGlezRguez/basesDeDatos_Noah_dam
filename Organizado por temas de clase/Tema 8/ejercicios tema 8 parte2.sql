@@ -8,7 +8,7 @@ use empresa_dam;
 comisión, el nombre de su jefe (columna Jefe), el salario de este (columna Salario jefe) y el
 resultado de dividir el salario del jefe entre el del empleado (columna Factor multiplicador)
 redondeado a dos decimales.*/
-select d.nomdep, e.nomemp 'empleado', e.salario 'salario empleado', e.comision, j.nomemp 'jefe', j.salario 'salario jefe', round(j.salario/e.salario,2) 'Factor multiplicador'
+select d.nomdep 'Departamento', e.nomemp 'Empleado', e.salario 'Salario empleado', e.comision 'Comisión del empleado', j.nomemp 'Jefe', j.salario 'Salario jefe', round(j.salario/e.salario,2) 'Factor multiplicador'
 from departamento d join empleado e on d.numdep = e.numdep left join empleado j on e.numempjefe = j.numemp 
 where d.nomdep = 'Ventas';
 
