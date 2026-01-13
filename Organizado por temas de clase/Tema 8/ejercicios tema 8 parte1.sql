@@ -1,8 +1,9 @@
-use empresa_dam;
 
 /* TEMA 8 - ACTIVIDADES - PARTE 1 -  ej1 a,b,c,d,e | ej2 a,b | ej3 a,b  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /* EJERCICIO 1.-*/
+
+use empresa_dam;
 
 /*a) Indica por cada puesto que sea desempeñado por más de dos empleados, el nombre del puesto,
 el número de empleados que lo desempeñan, la suma de sus salarios, la suma de sus

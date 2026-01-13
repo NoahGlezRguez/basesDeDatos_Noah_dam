@@ -2,6 +2,8 @@
 /* TEMA 8 - ACTIVIDADES - PARTE 1 - ej1 f,g */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /* EJERCICIO 1.-*/
+use empresa_dam;
+
 /*f) Indica para todos los empleados que trabajan en el departamento de ventas su nombre, salario,
 comisión, el nombre de su jefe (columna Jefe), el salario de este (columna Salario jefe) y el
 resultado de dividir el salario del jefe entre el del empleado (columna Factor multiplicador)
