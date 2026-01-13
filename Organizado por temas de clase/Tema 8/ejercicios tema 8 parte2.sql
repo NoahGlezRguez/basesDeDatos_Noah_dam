@@ -8,20 +8,20 @@ use empresa_dam;
 comisión, el nombre de su jefe (columna Jefe), el salario de este (columna Salario jefe) y el
 resultado de dividir el salario del jefe entre el del empleado (columna Factor multiplicador)
 redondeado a dos decimales.*/
-select d.nomdep 'Departamento', e.nomemp 'Empleado', e.salario 'Salario empleado', e.comision 'Comisión del empleado', j.nomemp 'Jefe', j.salario 'Salario jefe', round(j.salario/e.salario,2) 'Factor multiplicador'
-from departamento d join empleado e on d.numdep = e.numdep left join empleado j on e.numempjefe = j.numemp 
-where d.nomdep = 'Ventas';
+	select d.nomdep 'Departamento', e.nomemp 'Empleado', e.salario 'Salario empleado', e.comision 'Comisión del empleado', j.nomemp 'Jefe', j.salario 'Salario jefe', round(j.salario/e.salario,2) 'Factor multiplicador'
+	from departamento d join empleado e on d.numdep = e.numdep left join empleado j on e.numempjefe = j.numemp 
+	where d.nomdep = 'Ventas';
 
 
 /*g) Indica para todos los empleados que tengan dos o más empleados subordinados, su nombre,
 salario, número de subordinados que tiene y el nombre del departamento en el que trabaja.
 Ordena el resultado por número de subordinados de mayor a menor.*/
 
-select j.nomemp 'Empleado', j.salario 'Salario del empleado', count(e.numemp) 'Nº subordinados', d.nomdep 'Departamento'
-from  empleado j join empleado e on j.numemp = e.numempjefe join departamento d on j.numdep = d.numdep
-group by  j.numemp, j.nomemp, j.salario, d.nomdep
-having count(e.numempjefe) >= 2
-order by count(e.numemp) desc; 
+	select j.nomemp 'Empleado', j.salario 'Salario del empleado', count(e.numemp) 'Nº subordinados', d.nomdep 'Departamento'
+	from  empleado j join empleado e on j.numemp = e.numempjefe join departamento d on j.numdep = d.numdep
+	group by  j.numemp, j.nomemp, j.salario, d.nomdep
+	having count(e.numempjefe) >= 2
+	order by count(e.numemp) desc; 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -47,29 +47,29 @@ use empresa_dam;
 /*a. Muestra el nombre, puesto, salario y fecha de ingreso de los empleados que desempeñen el
 mismo puesto que Esther Gómez Bilbao o que tengan un salario mayor o igual que el de
 Albert Rius García.*/
-select puesto
-from empleado
-where nomemp = 'Esther Gómez Bilbao';
+	select puesto
+	from empleado
+	where nomemp = 'Esther Gómez Bilbao';
 
-select salario
-from empleado
-where nomemp = 'Albert Rius García';
+	select salario
+	from empleado
+	where nomemp = 'Albert Rius García';
 
-select nomemp, puesto, salario, fecingreso
-from empleado
-where puesto = (select puesto from empleado where nomemp = 'Esther Gómez Bilbao')
-or salario >= (select salario from empleado where nomemp = 'Albert Rius García');
+	select nomemp, puesto, salario, fecingreso
+	from empleado
+	where puesto = (select puesto from empleado where nomemp = 'Esther Gómez Bilbao')
+	or salario >= (select salario from empleado where nomemp = 'Albert Rius García');
 
 
 /*b. Muestra los nombres y puestos de los empleados que tienen el mismo puesto que el
 empleado apellidado Jiménez, excluido este.*/
-select puesto
-from empleado
-where nomemp like '%Jimenez%';
+	select puesto
+	from empleado
+	where nomemp like '%Jimenez%';
 
-select nomemp, puesto
-from empleado
-where nomemp not like '%Jimenez%' and puesto = (select puesto from empleado where nomemp like '%Jimenez%');
+	select nomemp, puesto
+	from empleado
+	where nomemp not like '%Jimenez%' and puesto = (select puesto from empleado where nomemp like '%Jimenez%');
 
 
 /*c. Visualiza los nombres de los departamentos en los que el salario medio es mayor o igual que
@@ -77,10 +77,10 @@ la media de todos los salarios.*/
 select avg(salario) 'Salario medio'
 from empleado;
 
-select d.nomdep
-from departamento d natural join empleado
-group by nomdep
-having avg(salario) >= (select avg(salario) 'Salario medio'from empleado);
+	select d.nomdep
+	from departamento d natural join empleado
+	group by nomdep
+	having avg(salario) >= (select avg(salario) 'Salario medio'from empleado);
 
 
 /*d. Selecciona el nombre de los empleados, puesto y localidad donde trabajan los empleados que
@@ -159,13 +159,24 @@ departamento.*/
     from empleado e left join departamento d on e.coddep = d.coddep left join centro c on d.codcen = c.codcen
     where salemp > (select avg(salemp) 'salario medio' from empleado);
 
+/*c) Obtén la descripción de la habilidad con nivel más alto mediante una consulta con una
+subconsulta y mediante una consulta con dos subconsultas anidadas.*/
+	/*informacion de las habilidades ordenadas por nivel*/
+    select *
+    from habemp
+    order by nivhab;
+    
+    select codhab, max(nivhab)
+    from habemp;
+
+
 /*Ejercicio 3.*/
 use geografia_dam;
 
 /*a. Obtén el nombre y número de habitantes de las localidades que tienen más población que la
 ciudad de Vitoria.*/
 
-
+	
 /*Indica para las localidades con más población que toda la provincia de Álava, el nombre de
 la localidad, el nombre de la provincia a la que pertenece y la población de la localidad,
 ordenando el resultado por población de la ciudad más poblada a la menos poblada. (NOTA.
