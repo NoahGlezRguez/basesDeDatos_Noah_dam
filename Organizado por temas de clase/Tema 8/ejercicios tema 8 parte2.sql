@@ -207,7 +207,8 @@ La población de una provincia se calcula sumando la población de todas sus loc
 						from localidades
 						where n_provincia = (select n_provincia
 											from provincias
-											where nombre = 'Álava'));
+											where nombre = 'Álava'))
+	order by l.poblacion desc;
 	
     /*muestra la poblacion total de todas las localidades de alava*/
 	select sum(poblacion) 'Poblacion total'
