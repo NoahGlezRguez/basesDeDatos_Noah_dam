@@ -161,25 +161,44 @@ departamento.*/
 
 /*c) Obtén la descripción de la habilidad con nivel más alto mediante una consulta con una
 subconsulta y mediante una consulta con dos subconsultas anidadas.*/
-	/*informacion de las habilidades ordenadas por nivel*/
+	
+    /*informacion de las habilidades ordenadas por nivel*/
     select *
     from habemp
-    order by nivhab;
+    order by nivhab desc
+    limit 1;
     
-    select codhab, max(nivhab)
-    from habemp;
+    /*obtener descripcion con una consulta con subconsulta*/
+    select deshab
+    from habilidad
+    where codhab = (select codhab
+					from habemp
+					order by nivhab desc
+					limit 1);
 
+	/*una consulta con dos subconsultas anidadas*/
+	select deshab
+    from habilidad
+    where codhab = (select codhab
+					from habemp
+					where nivhab = (select max(nivhab) from habemp));
 
 /*Ejercicio 3.*/
 use geografia_dam;
 
 /*a. Obtén el nombre y número de habitantes de las localidades que tienen más población que la
 ciudad de Vitoria.*/
-
+	
+    select nombre, poblacion
+    from localidades
+    where poblacion > (select poblacion
+						from localidades
+						where nombre = 'Vitoria');
 	
 /*Indica para las localidades con más población que toda la provincia de Álava, el nombre de
 la localidad, el nombre de la provincia a la que pertenece y la población de la localidad,
 ordenando el resultado por población de la ciudad más poblada a la menos poblada. (NOTA.
 La población de una provincia se calcula sumando la población de todas sus localidades).*/
-
+	
+    
 
