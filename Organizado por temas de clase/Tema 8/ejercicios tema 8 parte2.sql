@@ -195,10 +195,23 @@ ciudad de Vitoria.*/
 						from localidades
 						where nombre = 'Vitoria');
 	
-/*Indica para las localidades con más población que toda la provincia de Álava, el nombre de
+/*b.Indica para las localidades con más población que toda la provincia de Álava, el nombre de
 la localidad, el nombre de la provincia a la que pertenece y la población de la localidad,
 ordenando el resultado por población de la ciudad más poblada a la menos poblada. (NOTA.
 La población de una provincia se calcula sumando la población de todas sus localidades).*/
 	
-    
-
+	/*respuesta del ejercicio completa*/
+    select l.nombre 'Localidad', p.nombre 'Provincia', l.poblacion
+    from localidades l join provincias p on l.n_provincia = p.n_provincia join comunidades c on c.id_comunidad = p.id_comunidad
+    where poblacion > (select sum(poblacion)
+						from localidades
+						where n_provincia = (select n_provincia
+											from provincias
+											where nombre = 'Álava'));
+	
+    /*muestra la poblacion total de todas las localidades de alava*/
+	select sum(poblacion) 'Poblacion total'
+	from localidades
+	where n_provincia = (select n_provincia
+							from provincias
+							where nombre = 'Álava');
