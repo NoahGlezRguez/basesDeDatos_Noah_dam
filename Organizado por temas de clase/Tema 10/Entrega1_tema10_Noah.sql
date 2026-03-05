@@ -278,16 +278,114 @@ datos Empresa:
 Departamento (NumDep, NomDep, Localidad)
 Empleado (NumEmp, NomEmp, Puesto, NumEmpJefe, FecIngreso, Salario, Comision, NumDep)
 */
-	
+	use empresa_dam;
 /*
 a) Crea un rol llamado RolRRHH que tenga otorgados los privilegios necesarios para consultar
 las tablas Empleado y Departamento, crear, alterar y eliminar tablas en la base de datos
 Empresa y además añadir nuevos empleados a la tabla Empleado y modificar los atributos
 Puesto, NumEmpJefe, Salario, Comision y NumDep de dicha tabla.*/
 	
+    create role if not exists 'RolRRHH';
+    
+    grant select, create, alter, drop
+    on empresa_dam.*
+    to RolRRHH;
+    
+    grant insert, update (puesto, numempjefe, salario, comision, numdep)
+    on empresa_dam.empleado
+    to RolRRHH;
+    
+    show grants for RolRRHH;
+    
+    -- a la hora de usar grant tuve que usar root
+    
 /*b) Crea tres usuarios llamados rrhh1, rrhh2 y rrhh3 con la contraseña que desees, la cual deberá
 expirar en 30 días. Estos usuarios tendrán como rol por defecto el rol RolRRHH.*/
 	
+    create user
+    'rrhh1'@'%' identified by '1234',
+    'rrhh2'@'%' identified by '1234',
+    'rrhh3'@'%' identified by '1234'
+    password expire interval 30 day;
+    
+    grant 'RolRRHH' to 'rrhh1'@'%', 'rrhh2'@'%', 'rrhh3'@'%';
+    
 /*c) Entra al sistema con el usuario rrhh2 y comprueba que puede consultar la tabla Departamento
 y cambiar el salario de un empleado en la tabla Empleado, pero que no puede crear nuevos
 departamentos. Visualiza los privilegios que tiene otorgados el usuario rrhh2.*/
+	
+    /*
+    comprobaciones:
+		
+	C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql.exe -u rrhh2 -p
+	Enter password: ****
+	Welcome to the MySQL monitor.  Commands end with ; or \g.
+	Your MySQL connection id is 27
+	Server version: 8.0.45 MySQL Community Server - GPL
+
+	Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+	Oracle is a registered trademark of Oracle Corporation and/or its
+	affiliates. Other names may be trademarks of their respective
+	owners.
+
+	Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+	
+    mysql> update empleado
+    -> set salario = salario * 1.05
+    -> where numemp = 1;
+	Query OK, 1 row affected (0.00 sec)
+	Rows matched: 1  Changed: 1  Warnings: 0
+
+	
+	mysql> select * from empleado;
+	+--------+-----------------------+----------+------------+------------+---------+----------+--------+
+	| NumEmp | NomEmp                | Puesto   | NumEmpJefe | FecIngreso | Salario | Comision | NumDep |
+	+--------+-----------------------+----------+------------+------------+---------+----------+--------+
+	|      1 | Alberto Rey Ruiz      | Gerente  |       NULL | 2014-01-02 | 5775.00 |     0.00 |      1 |
+	|      2 | Luis Grande Gil       | Director |          1 | 2014-01-02 | 3200.00 |     0.00 |      1 |
+	|      3 | Ana Ruiz Almeida      | Empleado |          2 | 2014-01-02 | 1525.00 |     0.00 |      1 |
+	|      4 | Albert Rius García    | Director |          1 | 2016-02-02 | 3100.00 |     0.00 |      2 |
+	|      5 | Georgina Ruiz Plá     | Empleado |          4 | 2016-02-02 | 1420.00 |     0.00 |      2 |
+	|      6 | Laura Díaz Folgado    | Empleado |          4 | 2016-12-12 | 1320.00 |     0.00 |      2 |
+	|      7 | Esther Gómez Bilbao   | Director |          1 | 2018-01-02 | 2800.00 |     0.00 |      3 |
+	|      8 | Vanessa Amor López    | Vendedor |          7 | 2018-01-02 | 1600.00 |   250.00 |      3 |
+	|      9 | Ángel Jiménez Sánchez | Empleado |          8 | 2018-01-02 | 1450.00 |     0.00 |      3 |
+	|     10 | Sandra Rojo Núñez     | Vendedor |          8 | 2018-01-02 | 1900.00 |   400.00 |      3 |
+	|     11 | María Galiano Lastra  | Vendedor |         10 | 2020-01-15 | 1300.00 |   900.00 |      3 |
+	|     12 | Pedro Gómez Sanz      | Vendedor |         10 | 2022-05-05 | 1250.00 |   300.00 |      3 |
+	+--------+-----------------------+----------+------------+------------+---------+----------+--------+
+	12 rows in set (0.00 sec)
+
+	mysql> select * from departamento;
+	+--------+------------------+-----------+
+	| NumDep | NomDep           | Localidad |
+	+--------+------------------+-----------+
+	|      1 | Compras          | Madrid    |
+	|      2 | Recursos humanos | Barcelona |
+	|      3 | Ventas           | Bilbao    |
+	+--------+------------------+-----------+
+	3 rows in set (0.00 sec)
+	
+    mysql> insert into departamento
+    -> values(4, 'testeo', 'Canarias');
+	ERROR 1142 (42000): INSERT command denied to user 'rrhh2'@'localhost' for table 'departamento'
+	mysql>
+    
+    */
+    
+    show grants for 'rrhh2'@'%';
+    
+    /*
+    mysql> show grants for 'rrhh2'@'%';
+	+------------------------------------+
+	| Grants for rrhh2@%                 |
+	+------------------------------------+
+	| GRANT USAGE ON *.* TO `rrhh2`@`%`  |
+	| GRANT `RolRRHH`@`%` TO `rrhh2`@`%` |
+	+------------------------------------+
+	2 rows in set (0.00 sec)
+
+    */
+    
+    
