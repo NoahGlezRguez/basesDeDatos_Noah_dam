@@ -44,15 +44,12 @@ use pedidos_dam;
     where PVPArt = (select min(PVPArt) from articulo);
     end; //
     
-    
     call mostrarDatos();//
     
 /*
 	3. Crea una función que nos devuelva la descripción del artículo más caro de la base de datos.
 */
-	
-    drop function productoMasCaro;//
-    
+ 
     delimiter //
     create function productoMasCaro() returns varchar(30)
     reads sql data
@@ -71,7 +68,6 @@ use pedidos_dam;
 	y la fecha del pedido y se encargue de eliminarlo de la base de datos. Debe mostrase un mensaje
 	con el texto ‘Pedido XXXXX eliminado’.
 */
-	drop procedure eliminarPedido;//
 
 	delimiter //
     create procedure eliminarPedido(refpedi char(5))
@@ -105,6 +101,7 @@ use pedidos_dam;
     where codart = codarti;
     
     select pvpart into precioAhora from articulo where codart = codarti;
+    
     select concat ('El precio previo del producto era ', precioAntes, '. El precio del producto ahora es ', precioAhora) Mensaje;
     
     end //
