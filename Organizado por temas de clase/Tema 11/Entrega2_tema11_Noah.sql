@@ -156,17 +156,30 @@ siguiente: “Al empleado no XXXX se le ha asignado una comisión de YY.YY €�
 			update empleado
             set comision = (salarioemp * 0.05)
             where numemp = numemple;
-		else if salarioEmp between 1500 and 2500 then
+             select concat ('Al empleado nº ', numemple, ' se le ha asignado una comisión de ', round((salarioemp * 0.05), 2), '€') Mensaje;
+		elseif salarioEmp between 1500 and 2500 then
 			update empleado
             set comision = (salarioemp * 0.025)
             where numemp = numemple;
+			select concat ('Al empleado nº ', numemple, ' se le ha asignado una comisión de ', round((salarioemp * 0.025),2), '€') Mensaje;
         else
 			update empleado
             set comision = 0
             where numemp = numemple;
+             select concat ('Al empleado nº ', numemple, ' se le ha asignado una comisión de 0.00€') Mensaje;
 		end if;
+
     end //
     delimiter ;
+    
+    -- ver los empleados 
+    select *
+    from empleado;
+    
+    -- llamo al procedimiento con el empleado 6 que me apareción que no tenía comisión
+    call AsignarComision(6);
+    
+    drop procedure AsignarComision;
 /*
 11. Crea una función llamada SalarioJefe que reciba el nombre de un empleado y que devuelva un
 número real que tome el valor del salario del empleado dividido entre el número de empleados
@@ -174,5 +187,34 @@ subordinados que tenga. En caso de que el empleado no tenga subordinados, la fun
 devolver el valor -1.
 */
 	
-
+    delimiter //
+    create function SalarioJefe(nomemple varchar(40)) returns decimal(8,2)
+    reads sql data
+    begin
+		declare resultado decimal(8,2);
+        declare numjefe int;
+        declare subs decimal(8,2);
+        
+        select numemp into numjefe
+        from empleado
+        where nomemp = nomemple;
+        
+        select count(numemp) into subs
+        from empleado
+        where numempjefe = numjefe;
+        
+        if subs = 0 then
+			set resultado = -1;
+		else
+			select salario into resultado
+            from empleado
+            where numemp = numjefe;
+            
+            set resultado = resultado / subs;
+		end if;
+        return resultado;
+    end //
+    delimiter ;
 	
+    -- pruebo con el nº 1 que es jefe de todos
+	select SalarioJefe('Alberto Rey Ruiz');
