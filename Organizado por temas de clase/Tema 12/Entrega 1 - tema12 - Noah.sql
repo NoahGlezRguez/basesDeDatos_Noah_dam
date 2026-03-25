@@ -90,17 +90,55 @@ significativo.
     call cambiarNomDep(500, 'Limpieza'); -- no existe
     call cambiarNomDep(11, 'Compras'); -- duplicado
 
-/*##################################################################################################*/
-use geografia_dam; /*para el apartado 4 y 5*/
-/*##################################################################################################*/
 /*
 4. Crea un procedimiento que reciba el número de un departamento y se encargue de eliminarlo. En
-tal caso, se mostrará un mensaje que informe de la eliminación. No obstante, puede ocurrir que
+tal caso, se mostrará un mensaje que informe de la eliminación.No obstante, puede ocurrir que
 no sea posible eliminar el departamento por dos motivos: 1) porque no exista ningún departamento
 con el número pasado como parámetro, 2) porque no sea posible eliminarlo si hay algún empleado
 trabajando en él. En cualquiera de estos dos casos, se deberá mostrar un mensaje de error
 significativo.
+*/
 
+	delimiter //
+    create procedure elimDepart(num int)
+    begin
+		declare noexiste boolean default -1;
+        declare conEmples boolean default 0;
+        declare numemples int default 0;        
+        declare continue handler for not found set noexiste = 0;
+        
+        select numdep into noexiste
+        from departamento
+        where numdep = num;
+        
+        select count(numemp) into numemples
+        from empleado
+        where numDep = num;
+
+		if noexiste = 0 then
+			select concat('El departamento nº', num, ' no existe.') Error;
+		elseif numemples > 0 then
+			select concat('No se puede eliminar el departamento nº ', num, ' porque aún tiene ', numemples, ' empleado(s) trabajando en él.') Error;
+        else
+			delete from departamento
+            where numdep = num;
+            select concat('Departamento nº ', num, ' eliminado adecuadamente.') Mensaje;    
+        end if;
+        
+    end //
+    delimiter ;
+    
+    call elimDepart(11); -- funciona bien
+    call elimDepart(500); -- no existe
+    call elimDepart(1); -- tiene trabajadores
+    
+     drop procedure elimDepart;
+    
+/*-----------------------------------------------------------------------------------------------------------------------------------*/    
+-- cambio de bd:
+	use geografia_dam; 
+    
+/*
 Lleva a cabo las siguientes operaciones sobre la base de datos Geografia:
 
 Localidades (id_localidad, nombre, poblacion, n_provincia)
@@ -108,11 +146,7 @@ Localidades (id_localidad, nombre, poblacion, n_provincia)
 Provincias (n_provincia, nombre, superficie, id_capital, id_comunidad)
 
 Comunidades (id_comunidad, nombre, id_capital)
-*/
 
-	
-
-/*
 5. Crea un procedimiento que añada nuevas localidades a la base de datos. Este procedimiento
 recibirá cuatro parámetros: el identificativo de la localidad, su nombre, su población y el número
 de la provincia a la que pertenece. El procedimiento intentará añadir dicha localidad a la base de
@@ -123,4 +157,31 @@ en cuyo caso se mostrará el mensaje “No hay ninguna provincia con el número 
 añadir la localidad a la base de datos, se mostrará el mensaje: “Se ha añadido una localidad con el
 número XXXX llamada YYYYYYYY”.*/
 
-	
+	delimiter //
+    create procedure nueva_loca(id_loca int, nom_loca varchar(50), pobla_loca int, num_prov int)
+    begin
+		declare existe_loca boolean default 0;
+        declare existe_prov boolean;
+        declare continue handler for 1062 set existe_loca = 1;
+        
+        select count(n_provincia) into existe_prov
+        from provincias
+        where n_provincia = num_prov;
+
+		if existe_prov = 0 then
+			select concat('No hay ninguna provincia con el número ', num_prov) Error;
+        else
+			insert into localidades values (id_loca, nom_loca, pobla_loca, num_prov);
+            select concat('Se ha añadido una localidad con el número ', id_loca, ' llamada ', nom_loca, '.') Mensaje; 
+            end if;
+
+        if existe_loca != 0 then    
+            select concat('Ya hay una localidad con el número ', id_loca) Error;
+        end if;
+        
+    end //
+    delimiter ;
+
+	call nueva_loca(2865, 'El Rincón', 5, 48); -- localidad ya existe
+    call nueva_loca(1234, 'Narnia', 98797, 100); -- provincia errónea
+    call nueva_loca(1234, 'Narnia', 98788, 48); -- correcto
