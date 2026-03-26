@@ -127,13 +127,30 @@ HabEmp (CodHab, CodEmp, NivHab)
 Habilidad (CodHab, DesHab)
 */
 
+	use empresa2_dam;
 
 /*
 5. Crea una función llamada ObtenerEdad que reciba el NIF de un empleado y nos devuelva
 su edad. Para calcular la edad se podrá hacer uso de la función timestampdiff.
 */
 
-
+	delimiter //
+    create function ObtenerEdad(nif char(9)) returns int
+    reads sql data
+    begin
+		declare edad int;
+        declare nacim date;
+        select fecnaemp into nacim
+        from empleado
+        where nifemp = nif;
+        
+        set edad = timestampdiff(year, nacim, curdate());
+		
+		return edad;
+    end //
+    delimiter ;
+    
+    select obteneredad('21451451V') Edad; -- probando con el primer empleado que aparece
 
 /*
 6. Crea un procedimiento llamado SubirSalarioDepar que reciba el nombre de un
