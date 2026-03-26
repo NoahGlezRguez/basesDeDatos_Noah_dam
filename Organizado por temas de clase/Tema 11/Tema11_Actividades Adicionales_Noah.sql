@@ -161,7 +161,9 @@ Mostrar un mensaje como el siguiente: ‘El salario de los empleados del dpto. X
 subido un Y%’.
 */
 
-
+	delimiter //
+    
+    delimiter ;
 
 /*
 7. Crea una función llamada NumDptosDependientes que reciba el código de un departamento
@@ -170,6 +172,23 @@ el atributo CodDepDep de la tabla Departamento indica por cada departamento cuá
 departamento del que depende, o lo que es lo mismo, su departamento jefe.
 */
 
+	delimiter //
+    create function NumDptosDependientes(cod char(5)) returns char(5)
+    reads sql data
+    begin
+		declare depedepe char(5);
+        
+        select count(*) into depedepe
+        from departamento
+        where coddepdep = cod;
+        
+        return depedepe;
+    end//
+    delimiter ;
+    
+    select NumDptosDependientes('JEFZS') Resultado;
+    
+    drop function NumDptosDependientes;
 
 /*
 Sobre la base de datos geografia realiza las siguientes operaciones:
@@ -180,7 +199,7 @@ Provincias (n_provincia, nombre, superficie, id_capital, id_comunidad)
 Comunidades (id_comunidad, nombre, id_capital)
 */
 
-
+	use geografia_dam;
 
 /*
 8. Crea un procedimiento que reciba el nombre de una comunidad autónoma y que muestre el
@@ -190,11 +209,16 @@ deberá mostrar el mensaje: “La comunidad autónoma llamada XXXX no está en l
 datos”.
 */
 
-
+	delimiter //
+    
+    delimiter ;
 
 /*
 9. Crea una función que reciba el nombre de una comunidad autónoma y devuelva el nombre
 de la provincia con mayor superficie de la misma.
 */
 
-
+	delimiter //
+    
+    delimiter ;
+    
