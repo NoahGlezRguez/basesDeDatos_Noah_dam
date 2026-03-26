@@ -46,9 +46,25 @@ número de empleados y salario medio de estos (redondeado a dos decimales).
 	delimiter //
 	create procedure depfaminfo()
 	begin
-		
+		declare nomdepe varchar(40);
+        declare numemps int;
+        declare salme decimal(6,2);
+        declare c cursor for select d.nomdep as NombreDepart, count(e.numemp) as Empleados, round(avg(salario),2) SalarioMedio
+								from departamento d join empleado e on d.numdep = e.numdep
+								group by d.nomdep
+								order by Empleados desc
+								limit 2;
+		open c;
+        fetch c into nomdepe, numemps, salme;
+        select concat('Depart: ', nomdepe, ', empleados: ', numemps, ', salario medio: ', salme, '€.') Resultado;
+        fetch c into nomdepe, numemps, salme;
+        select concat('Depart: ', nomdepe, ', empleados: ', numemps, ', salario medio: ', salme, '€.') Resultado;
+        close c;
 	end//
     delimiter ;
+
+	call depfaminfo();
+    drop procedure depfaminfo;
 
 /*
 8. Crea un procedimiento que muestre los siguientes datos de empleados: nombre, puesto, salario y
