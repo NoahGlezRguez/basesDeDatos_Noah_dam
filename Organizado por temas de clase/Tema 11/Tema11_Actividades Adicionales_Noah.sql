@@ -10,14 +10,32 @@ Pedido (RefPed, FecPed)
 LíneaPedido (RefPed, CodArt, CantArt)
 Artículo (CodArt, DesArt, PVPArt)
 */
-
+use pedidos_dam;
 
 /*
 1. Crea una función que reciba el código de un artículo y que devuelva un número entero que
 indique en cuántos pedidos diferentes ha sido solicitado dicho artículo.
 */
 
-
+	delimiter //
+    create function numPedidos(arti char(5)) returns int
+    reads sql data
+    begin
+		declare numpe int;
+        
+        select count(refped) into numpe
+        from lineapedido
+        where codart = arti;
+        
+        return numpe;
+    end //
+    delimiter ;
+    
+    -- pruebo
+    select codart from lineapedido;
+    
+    select numPedidos('A0043') Resultado;
+    
 
 /*
 2. Escribe un procedimiento que reciba dos parámetros: el código de un artículo y un importe.
@@ -27,6 +45,31 @@ la modificación el siguiente mensaje: “El nuevo precio del artículo con cód
 YYYY.YY euros”.
 */
 
+	delimiter //
+    create procedure subirPrecio(arti char(5), subida decimal(6,2))
+    begin
+		declare precio decimal(6,2);
+        
+        select pvpart into precio
+        from articulo
+        where codart = arti;
+        
+        update articulo
+        set pvpart = precio + subida
+        where codart = arti;
+        
+        select concat('El nuevo precio del artículo con código ', arti, ' es ', precio + subida, ' euros') Mensaje;
+    end //
+    delimiter ;
+
+	-- ver precio antes
+	select pvpart
+    from articulo
+    where codart = 'A0043';
+    
+    -- probar a subir un centimo
+    call subirPrecio('A0043', 0.01);
+    
 
 /*
 3. Crea un procedimiento que reciba el código de un artículo y una descripción. El
@@ -36,10 +79,45 @@ realizar la inserción, mostrará el mensaje: “Se ha añado un artículo con c
 precio YYYY.YY euros.”
 */
 
+	delimiter //
+    create procedure nuevoArti(arti char(5), des varchar(30))
+    begin
+		declare precio decimal(6,2);
+        
+        select max(pvpart) into precio
+        from articulo;
+        
+        insert into articulo values (arti, des, precio);
+        
+        select concat('Se ha añadido un artículo con código ', arti, ' y precio ', precio, ' euros.') Mensaje;
+        
+    end //
+    delimiter ;
+
+	call nuevoArti('X0061', 'Subrayador');
 
 /*
 4. Crea una función que reciba la referencia de un pedido y que devuelva el número total de
 unidades de artículos que han sido solicitadas en dicho pedido.
+*/
+
+	delimiter //
+	create function numarti(refe char(5)) returns int
+    reads sql data
+    begin
+		declare numart int;
+        
+        select count(codart) into numart
+        from lineapedido
+        where refped = refe;
+        
+        return numart;
+    end //
+	delimiter ;
+
+	select numarti('P0001') Resultado; -- pruebo con un pedido
+
+/*
 Para la base de datos Empresa2, lleva a cabo las siguientes operaciones:
 Centro (CodCen, CodEmpDir, NomCen, DirCen, PobCen)
 Departamento (CodDep, CodEmpDir, CodDepDep, CodCen, NomDep, PreAnu, TiDir)
