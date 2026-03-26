@@ -76,6 +76,26 @@ parámetro.
 	delimiter //
 	create procedure emplepobres(num int)
 	begin
-		
+		declare nom varchar(40);
+        declare pue enum('Gerente', 'Director', 'Empleado', 'Vendedor');
+		declare sal decimal(6,2);
+        declare com decimal(6,2);
+        declare fin boolean default 0;
+        declare c cursor for select nomemp, puesto, salario, comision
+								from empleado
+								where salario = (select min(salario) from empleado)
+                                limit num;
+		declare continue handler for not found set fin = 1;
+        open c;
+        fetch c into nom, pue, sal, com;
+        select concat('Nombre: ', nom, ', puesto: ', pue, ', salario: ', sal, ', comisión: ', com) Resultado;
+        while fin = 0 do
+			fetch c into nom, pue, sal, com;
+			select concat('Nombre: ', nom, ', puesto: ', pue, ', salario: ', sal, ', comisión: ', com) Resultado;
+        end while;
+        close c;
 	end//
     delimiter ;
+    
+    call emplepobres(20);
+    
