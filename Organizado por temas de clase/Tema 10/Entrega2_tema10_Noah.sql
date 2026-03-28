@@ -1,5 +1,5 @@
 /* Se entregan los ejercicios 3 y 4 */
-
+use empresa_dam;
 /*
 3. A partir de las tablas Empleado y Departamento de la base de datos Empresa lleva a cabo las
 siguientes operaciones relacionadas con vistas:*/
