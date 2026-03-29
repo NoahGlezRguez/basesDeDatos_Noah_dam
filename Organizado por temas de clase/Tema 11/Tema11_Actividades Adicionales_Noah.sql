@@ -194,8 +194,6 @@ subido un Y%’.
     
     call SubirSalarioDepar('Ventas');
     
-    drop procedure SubirSalarioDepar;
-
 /*
 7. Crea una función llamada NumDptosDependientes que reciba el código de un departamento
 y que nos indique cuántos departamentos dependen directamente de él. Ten en cuenta que
@@ -219,8 +217,6 @@ departamento del que depende, o lo que es lo mismo, su departamento jefe.
     
     select NumDptosDependientes('JEFZS') Resultado;
     
-    drop function NumDptosDependientes;
-
 /*
 Sobre la base de datos geografia realiza las siguientes operaciones:
 Localidades (id_localidad, nombre, poblacion, n_provincia)
@@ -265,15 +261,27 @@ datos”.
     delimiter ;
 	
     call mostrarInfoCA(7);
-    
-    drop procedure mostrarInfoCA;
-    
+       
 /*
 9. Crea una función que reciba el nombre de una comunidad autónoma y devuelva el nombre
 de la provincia con mayor superficie de la misma.
 */
 
 	delimiter //
-    
+    create function suProvConMasArea(nomca varchar(30)) returns varchar(30)
+    reads sql data
+    begin
+		declare nompro varchar(30);
+        
+        select p.nombre into nompro
+        from Provincias p join Comunidades c on p.id_comunidad = c.id_comunidad
+		where c.nombre = nomca
+        order by superficie desc
+        limit 1;
+        
+		return nompro;
+    end//
     delimiter ;
     
+	select suProvConMasArea('País Vasco') Resultado;
+	
