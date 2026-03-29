@@ -1,9 +1,6 @@
--- Con el usuario root
+-- drop database geografia_dam;
 
 create database geografia_dam collate utf8mb4_spanish_ci;
-grant all on geografia_dam.* to daw@localhost;
-
--- Con el usuario dam
 
 use geografia_dam;
 
@@ -13,7 +10,7 @@ nombre varchar(30) not null unique,
 id_capital int not null unique,
 constraint ck_id_comunidad check(id_comunidad between 1 and 19));
 
-insert into comunidades values (1,'Galicia',3096);
+insert into Comunidades values (1,'Galicia',3096);
 insert into comunidades values (2,'La Rioja',5383);
 insert into comunidades values (3,'Extremadura',5936);
 insert into comunidades values (7,'País Vasco',6570);
@@ -25,32 +22,27 @@ superficie int not null ,
 id_capital int not null unique,
 id_comunidad int not null,
 constraint ck_n_provincia check(n_provincia between 1 and 52),
-constraint ck_superficie check (superficie between 1 and 150000),
-constraint FK_Comunidad_Provincia foreign key(id_comunidad) references Comunidades(id_comunidad) 
-	   on update cascade);
+constraint ck_superficie check (superficie between 1 and 150000));
 
-insert into provincias values (1,'Álava',3047,6570,7);
-insert into provincias values (6,'Badajoz',21766,5868,3);
-insert into provincias values (10,'Cáceres',19868,5506,3);
-insert into provincias values (15,'La Coruña',7921,3048,1);
-insert into provincias values (20,'Guipuzcoa',1997,6400,7);
-insert into provincias values (26,'La Rioja',5045,5383,2);
-insert into provincias values (27,'Lugo',9856,3139,1);
-insert into provincias values (32,'Orense',7273,2976,1);
-insert into provincias values (36,'Pontevedra',4495,2906,1);
-insert into provincias values (48,'Vizcaya',2217,6442,7);
+insert into Provincias values (1,'Álava',3047,6570,7);
+insert into Provincias values (6,'Badajoz',21766,5868,3);
+insert into Provincias values (10,'Cáceres',19868,5506,3);
+insert into Provincias values (15,'La Coruña',7921,3048,1);
+insert into Provincias values (20,'Guipuzcoa',1997,6400,7);
+insert into Provincias values (26,'La Rioja',5045,5383,2);
+insert into Provincias values (27,'Lugo',9856,3139,1);
+insert into Provincias values (32,'Orense',7273,2976,1);
+insert into Provincias values (36,'Pontevedra',4495,2906,1);
+insert into Provincias values (48,'Vizcaya',2217,6442,7);
 
-create table Localidades(
+create table localidades(
 id_localidad int primary key,
 nombre varchar(50) not null,
 poblacion int not null ,
 n_provincia int not null,
  constraint ck_id_localidad check (id_localidad between 1 and 9000),
  constraint ck_poblacion check (poblacion between 1 and 10000000),
-constraint UQ_Localidades unique (nombre, n_provincia),
-constraint FK_Provincia_Localidad foreign key(n_provincia) references Provincias(n_provincia) 
-	   on update cascade
-);
+constraint UQ_Localidades unique (nombre, n_provincia));
 
 insert into localidades values (2865,'Agolada',5094,36);
 insert into localidades values (2866,'Arbo',5020,36);
@@ -1181,10 +1173,14 @@ insert into localidades values (6573,'Zambrana',341,1);
 insert into localidades values (6574,'Zigoitia',983,1);
 insert into localidades values (6575,'Zuia',1399,1);
 
+alter table Provincias
+add constraint FK_Comunidad_Provincia foreign key(id_comunidad) references Comunidades(id_comunidad) on update cascade;
+
+alter table localidades
+add constraint FK_Provincia_Localidad foreign key(n_provincia) references Provincias(n_provincia) on update cascade;
+
 alter table Comunidades add constraint FK_Capital_Comunidad 
-	foreign key(id_capital) references Localidades(id_localidad) on update cascade;
+foreign key(id_capital) references localidades(id_localidad) on update cascade;
 
 alter table Provincias add constraint FK_Capital_Provincia 
-	foreign key(id_capital) references Localidades(id_localidad) on update cascade;
-
-
+foreign key(id_capital) references Localidades(id_localidad) on update cascade;
