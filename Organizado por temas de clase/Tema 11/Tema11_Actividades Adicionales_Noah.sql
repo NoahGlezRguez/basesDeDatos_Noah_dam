@@ -162,8 +162,39 @@ subido un Y%’.
 */
 
 	delimiter //
-    
+    create procedure SubirSalarioDepar(nombre varchar(40))
+    begin
+		declare codigo char(5);
+        declare salme decimal(7,2);
+        declare subida decimal(7,2);
+        
+        select coddep into codigo
+        from DEPARTAMENTO
+        where nomdep = nombre;
+        
+        select avg(salemp) into salme
+        from EMPLEADO
+        where coddep = codigo;
+		
+        if salme > 35000 then
+			set subida = 0.02;
+		else
+			set subida = 0.04;
+		end if;
+        
+        update EMPLEADO
+        set salemp = salemp + (salemp * subida)
+        where coddep = codigo;
+        
+        set subida = subida * 100;
+        
+        select concat('El salario del departamento ', nombre, ' ha subido un ', subida, '%.') as Mensaje;
+    end//
     delimiter ;
+    
+    call SubirSalarioDepar('Ventas');
+    
+    drop procedure SubirSalarioDepar;
 
 /*
 7. Crea una función llamada NumDptosDependientes que reciba el código de un departamento
@@ -210,9 +241,33 @@ datos”.
 */
 
 	delimiter //
-    
+    create procedure mostrarInfoCA(codca int)
+    begin
+		declare numpro int;
+        declare numloca int;
+        declare nomca varchar(30);
+        
+        select nombre into nomca
+        from Comunidades
+        where id_comunidad = codca;
+        
+        select count(distinct p.n_provincia), count(l.id_localidad) into numpro, numloca
+        from Comunidades c left join Provincias p on c.id_comunidad = p.id_comunidad
+							left join localidades l on p.n_provincia = l.n_provincia
+		where c.id_comunidad = codca;
+        
+        if numpro = 0 then
+			select concat('La comunidad autónoma ', codca, ' no está en la base de datos.') Error;
+        else
+			select concat('La comunidad ', nomca, ' tiene ', numpro, ' provincias y ', numloca, ' localidades.') Resultado;
+		end if;
+    end//
     delimiter ;
-
+	
+    call mostrarInfoCA(7);
+    
+    drop procedure mostrarInfoCA;
+    
 /*
 9. Crea una función que reciba el nombre de una comunidad autónoma y devuelva el nombre
 de la provincia con mayor superficie de la misma.
