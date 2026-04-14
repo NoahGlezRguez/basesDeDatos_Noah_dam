@@ -19,7 +19,25 @@ eliminados de la tabla Articulo. Crea un disparador llamado BorradoArticulos que
 vez que se realice un borrado sobre la tabla Articulo, de manera que el artículo que se borre se
 añada a la tabla ArticulosAntiguos.
 */
-
+	
+    use pedidos_dam;
+	
+	create table articulosAntiguos like Articulo; 
+    
+    create trigger BorradoArticulos before delete
+    on articulo for each row
+    insert into articulosAntiguos values (old.codart, old.desart, old.pvpart);
+    
+    -- inserto un nuevo articulo cualquiera para probar:
+    insert into articulo values('A9999', 'EjemploDeArticulo', 10.8);
+    
+    -- lo borro para que salte el trigger:
+    delete from articulo
+    where codart = 'A9999';
+	
+    -- compruebo si funcionó:
+    select * from articulosAntiguos;
+    
 /*
 2. Crea una tabla llamada AuditoriaPrecios con un solo atributo llamado Linea de tipo varchar(100).
 Crea después un disparador llamado AuditarPrecios que dé fe de las modificaciones de precios
@@ -30,7 +48,23 @@ descripción del artículo; yy.yy, el precio antes de la modificación; zz.zz, e
 modificación y AAAA-MM-DD, la fecha en la que se ha llevado a cabo la modificación. Para
 obtener la fecha actual puedes hacer uso de la función current_date.
 */
-
+	create table AuditoriaPrecios (
+    Linea varchar(100)
+    );
+	
+    delimiter //
+    create trigger AuditarPrecios
+    after update on Articulo.PVPArt for each row
+    begin
+		declare  masDe10 boolean default 0;
+        
+        if (new.pvpart > (old.pvpart * 1.10)) then 
+			insert into AuditoriaPrecios values(concat('El artículo ', codart, ' ha cambiado su precio de ',
+										old.pvpart, ' a ', new.pvpart, ' el ', current_date));
+		end if;
+	end//
+    delimiter ;
+	
 /*
 3. Crea una tabla llamada EmpleadosAntiguos copia de la tabla Empleado y sin datos, pero con dos
 atributos adicionales: fecha_baja, de tipo fecha, y finiquito de tipo numeric(7,2). Crea un
