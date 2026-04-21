@@ -54,17 +54,22 @@ obtener la fecha actual puedes hacer uso de la función current_date.
 	
     delimiter //
     create trigger AuditarPrecios
-    after update on Articulo.PVPArt for each row
+    after update on Articulo for each row
     begin
-		declare  masDe10 boolean default 0;
-        
-        if (new.pvpart > (old.pvpart * 1.10)) then 
-			insert into AuditoriaPrecios values(concat('El artículo ', codart, ' ha cambiado su precio de ',
-										old.pvpart, ' a ', new.pvpart, ' el ', current_date));
-		end if;
+         if ((new.pvpart > (old.pvpart * 1.10)) OR (new.pvpart < (old.pvpart * 0.9))) then 
+			insert into AuditoriaPrecios values(concat('El artículo ', old.codart, ' ha cambiado su precio de ',
+												old.pvpart, ' a ', new.pvpart, ' el ', current_date));
+        end if;
+
 	end//
     delimiter ;
 	
+    drop trigger auditarprecios;
+    
+   update Articulo
+   set PVPArt = 1.50
+   where CodArt = 'A0078';
+    
 /*
 3. Crea una tabla llamada EmpleadosAntiguos copia de la tabla Empleado y sin datos, pero con dos
 atributos adicionales: fecha_baja, de tipo fecha, y finiquito de tipo numeric(7,2). Crea un
@@ -90,7 +95,9 @@ NOTA: La antigüedad se debe calcular como el número de meses transcurridos ent
 		en la unidad de tiempo indicada como primer parámetro.
 
 */
-
+	
+    
+    
 /*
 4. Se desea almacenar dentro de la base de datos Empresa información sobre las modificaciones
 salariales de los empleados. Para ello se debe crear la tabla CambiosSalariales con la siguiente
