@@ -95,8 +95,36 @@ NOTA: La antigüedad se debe calcular como el número de meses transcurridos ent
 		en la unidad de tiempo indicada como primer parámetro.
 
 */
+	use empresa_dam;
 	
+    create table EmpleadosAntiguos like Empleado;
     
+    alter table EmpleadosAntiguos
+    add fecha_baja date,
+	add	finiquito numeric(7,2);
+    
+    delimiter //
+    create trigger BajaEmpleado before delete
+    on empleado for each row
+    begin
+        declare finiquito int default
+        
+        
+        set emple = old.numemp;
+		insert into empleadosantiguos (NumEmp, NomEmp, Puesto, NumEmpJefe, FecIngreso, Salario, Comision, NumDep)
+        values(old.NumEmp, old.NomEmp, old.Puesto, old.NumEmpJefe, old.FecIngreso, old.Salario, old.old.Comision, old.NumDep);
+        
+        update empleadosantiguos
+        set fecha_baja = current_date()
+        where new.numemp = old.numemp;
+        
+        update empleadosantiguos
+        set finiquito = 1
+        where new.numemp = old.numemp;
+    end//
+    delimiter ;
+    
+    drop trigger bajaempleado;
     
 /*
 4. Se desea almacenar dentro de la base de datos Empresa información sobre las modificaciones
